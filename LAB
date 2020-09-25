@@ -1,0 +1,6 @@
+create table student(USN integer primary key,NAME varchar(20),PHNM integer,COURSE varchar(10));
+insert into student values(1,'Krish',8919,'CSE');   
+insert into student values(2,'Elsa',8768,'ISE');    
+insert into student values(3,'Charly',5647,'ECE');    
+insert into student values(4,'Tony',7699,'CSE');    
+insert into student values(5,'Barbie',8960,'ISE');
