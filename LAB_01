@@ -1,47 +1,121 @@
-create table PUBLISHER(Name varchar(20), Address varchar(30), Phone long, primary key (Name));
-                                                                                       
-create table BOOK(Book_id integer, Title varchar(20), Publisher_Name varchar(20), Pub_Year integer, primary key(Book_id), foreign key(Publisher_Name) references PUBLISHER(Name));
+**Schema (MySQL v5.7)**
 
-create table BOOK_AUTHORS(Book_id integer, Author_Name varchar(20), primary key(Book_id), foreign key(Book_id) references BOOK(Book_id));
-                                                                                                                               
-create table LIBRARY_BRANCH(Branch_id integer, Branch_Name varchar(30), Address varchar(30), primary key(Branch_id));
-                                                                                                         
-create table BOOK_COPIES(Book_id integer, Branch_id integer, No_of_Copies integer, primary key(Book_id,Branch_id), foreign key(Book_id) references BOOK(Book_id), foreign key(Branch_id) references LIBRARY_BRANCH(Branch_id));
+    create table STUDENT(usn varchar(20) primary key,sname varchar(20),address varchar(20),phone long,gender varchar(10));
+                                                                                                                     
+    create table SEMSEC(ssid integer primary key,sem integer,sec varchar(5));
+                                                                         
+    create table CLASS(usn varchar(20) primary key,ssid integer,foreign key(usn) references STUDENT(usn),foreign key(ssid) references SEMSEC(ssid));
+                                                                                                                                             
+    create table COURSE(subcode varchar(20) primary key,title varchar(20),sem integer,credits integer);
+                                                                                                                                             
+    create table IAMARKS(usn varchar(20),subcode varchar(20),ssid integer,test1 integer,test2 integer,test3 integer,finalia integer,primary key(usn,subcode,ssid),foreign key(usn) references STUDENT(usn),foreign key(subcode) references COURSE(subcode),foreign key(ssid) references SEMSEC(ssid));
+    
+    insert into STUDENT values('CS101','Mike','Manglore',9696500000,'Male');
+    insert into STUDENT values('CS102','Joyce','Banglore',9496500000,'Female');
+    insert into STUDENT values('CS103','Dustin','Mysore',9696400000,'Male');
+    insert into STUDENT values('CS104','Lucas','Manglore',9697500000,'Male');
+    insert into STUDENT values('CS105','Nancy','Banglore',9698500000,'Female');
+    
+    insert into SEMSEC values(111,5,'CS1');
+    insert into SEMSEC values(112,5,'CS2');
+    insert into SEMSEC values(113,5,'CS1');
+    insert into SEMSEC values(114,5,'CS1');
+    insert into SEMSEC values(115,5,'CS2');
+    
+    insert into CLASS values('CS101',113);
+    insert into CLASS values('CS102',115);
+    insert into CLASS values('CS103',111);
+    insert into CLASS values('CS104',112);
+    insert into CLASS values('CS105',114);
+    
+    insert into COURSE values('18CS51','ATC',5,3);
+    insert into COURSE values('18CS52','DBMS',5,4);
+    insert into COURSE values('18CS53','UP',5,2);
+    insert into COURSE values('18CS54','ME',5,3);
+    insert into COURSE values('18CS55','CNS',5,4);
+    
+    insert into IAMARKS values('CS101','18CS51',113,50,46,47,48);
+    insert into IAMARKS values('CS101','18CS52',113,40,40,47,42);
+    insert into IAMARKS values('CS101','18CS53',113,50,40,45,45);
+    insert into IAMARKS values('CS101','18CS54',113,40,46,41,42);
+    insert into IAMARKS values('CS101','18CS55',113,50,46,40,45);
+    insert into IAMARKS values('CS103','18CS51',111,45,42,44,44);
+    insert into IAMARKS values('CS103','18CS52',111,41,47,30,44);
+    insert into IAMARKS values('CS103','18CS53',111,38,42,41,45);
+    insert into IAMARKS values('CS103','18CS54',111,35,45,40,40);
+    insert into IAMARKS values('CS103','18CS55',111,39,46,40,42);
 
-create table BOOK_LENDING(Book_id integer, Branch_id integer, Card_No integer, Date_Out date, Due_Date date, primary key(Book_id,Branch_id,Card_No), foreign key(Book_id) references BOOK(Book_id), foreign key(Branch_id) references LIBRARY_BRANCH(Branch_id));
+---
 
-insert into PUBLISHER values('Mcgraw','Bangalore',9696500001);
-insert into PUBLISHER values('Person','Bangalore',9595950000);
-insert into PUBLISHER values('SAM Pub','Mangalore',9494940000);
-insert into PUBLISHER values('IOP','Mumbai',9797970000);
-insert into PUBLISHER values('IEEE','Delhi',9090900000);
+**Query #1**
 
-insert into BOOK values(10,'DBMS','Mcgraw',2010);
-insert into BOOK values(20,'SE','Person',2008);
-insert into BOOK values(30,'FLAT','SAM Pub',2019);
-insert into BOOK values(40,'BDA','IOP',2018);
-insert into BOOK values(50,'MP','IEEE',2020);
+    SELECT * FROM STUDENT;
 
-insert into BOOK_AUTHORS values(10,'Andrew');
-insert into BOOK_AUTHORS values(20,'Raj Kumar');
-insert into BOOK_AUTHORS values(30,'Samual');
-insert into BOOK_AUTHORS values(40,'Padma');
-insert into BOOK_AUTHORS values(50,'Guru');
+| usn   | sname  | address  | phone      | gender |
+| ----- | ------ | -------- | ---------- | ------ |
+| CS101 | Mike   | Manglore | 9696500000 | Male   |
+| CS102 | Joyce  | Banglore | 9496500000 | Female |
+| CS103 | Dustin | Mysore   | 9696400000 | Male   |
+| CS104 | Lucas  | Manglore | 9697500000 | Male   |
+| CS105 | Nancy  | Banglore | 9698500000 | Female |
 
-insert into LIBRARY_BRANCH values(100,'Main Building','Mangalore');
-insert into LIBRARY_BRANCH values(200,'Ground Floor','Bangalore');
-insert into LIBRARY_BRANCH values(300,'1st Floor','Bangalore');
-insert into LIBRARY_BRANCH values(400,'Research Building','Udupi');
-insert into LIBRARY_BRANCH values(500,'OPD Building','Manipal');
+---
+**Query #2**
 
-insert into BOOK_COPIES values(10,100,20);
-insert into BOOK_COPIES values(30,100,30);
-insert into BOOK_COPIES values(10,200,5);
-insert into BOOK_COPIES values(20,300,15);
-insert into BOOK_COPIES values(40,500,7);
+    SELECT * FROM SEMSEC;
 
-insert into BOOK_LENDING values(10,100,201,'2020-06-15','2020-06-25');
-insert into BOOK_LENDING values(20,200,202,'2020-07-10','2020-07-20');
-insert into BOOK_LENDING values(30,300,203,'2020-07-25','2020-07-30');
-insert into BOOK_LENDING values(40,400,204,'2020-08-14','2020-08-26');
-insert into BOOK_LENDING values(50,500,205,'2020-09-01','2020-09-10');
+| ssid | sem | sec |
+| ---- | --- | --- |
+| 111  | 5   | CS1 |
+| 112  | 5   | CS2 |
+| 113  | 5   | CS1 |
+| 114  | 5   | CS1 |
+| 115  | 5   | CS2 |
+
+---
+**Query #3**
+
+    SELECT * FROM CLASS;
+
+| usn   | ssid |
+| ----- | ---- |
+| CS103 | 111  |
+| CS104 | 112  |
+| CS101 | 113  |
+| CS105 | 114  |
+| CS102 | 115  |
+
+---
+**Query #4**
+
+    SELECT * FROM COURSE;
+
+| subcode | title | sem | credits |
+| ------- | ----- | --- | ------- |
+| 18CS51  | ATC   | 5   | 3       |
+| 18CS52  | DBMS  | 5   | 4       |
+| 18CS53  | UP    | 5   | 2       |
+| 18CS54  | ME    | 5   | 3       |
+| 18CS55  | CNS   | 5   | 4       |
+
+---
+**Query #5**
+
+    SELECT * FROM IAMARKS;
+
+| usn   | subcode | ssid | test1 | test2 | test3 | finalia |
+| ----- | ------- | ---- | ----- | ----- | ----- | ------- |
+| CS101 | 18CS51  | 113  | 50    | 46    | 47    | 48      |
+| CS101 | 18CS52  | 113  | 40    | 40    | 47    | 42      |
+| CS101 | 18CS53  | 113  | 50    | 40    | 45    | 45      |
+| CS101 | 18CS54  | 113  | 40    | 46    | 41    | 42      |
+| CS101 | 18CS55  | 113  | 50    | 46    | 40    | 45      |
+| CS103 | 18CS51  | 111  | 45    | 42    | 44    | 44      |
+| CS103 | 18CS52  | 111  | 41    | 47    | 30    | 44      |
+| CS103 | 18CS53  | 111  | 38    | 42    | 41    | 45      |
+| CS103 | 18CS54  | 111  | 35    | 45    | 40    | 40      |
+| CS103 | 18CS55  | 111  | 39    | 46    | 40    | 42      |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/f/ijUsr71nHfeTZQJhyx4kki/0)
