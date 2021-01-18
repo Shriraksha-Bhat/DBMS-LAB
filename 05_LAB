@@ -1,0 +1,190 @@
+**Schema (MySQL v5.7)**
+
+    create table DEPARTMENT(DNo integer primary key, DName varchar(20), MgrStartDate date);
+    
+    create table EMPLOYEE(SSN integer primary key, Name varchar(20),Address varchar(20), Sex varchar(1), Salary integer, DNo integer, foreign key(DNo) references DEPARTMENT (DNo) on delete cascade);
+    
+    create table DLOCATION(DNo integer, DLoc varchar(20), primary key(DNo,DLoc), foreign key(DNo) references DEPARTMENT(DNo) on delete cascade);
+    
+    create table PROJECT(PNo integer primary key, PName varchar(20),PLocation varchar(20), DNo integer, foreign key(DNo) references DEPARTMENT(DNo) on delete cascade);
+    
+    create table WORKS_ON(SSN integer, PNo integer, Hour integer, primary key(SSN,PNo), foreign key(SSN) references EMPLOYEE(SSN) on delete cascade, foreign key(PNo) references PROJECT(PNo) on delete cascade); 
+    
+    insert into DEPARTMENT values (1,'Accounts','2020-08-15');
+    insert into DEPARTMENT values (2,'Research','2015-07-25');
+    insert into DEPARTMENT values (3,'Administration','2018-05-10');
+    insert into DEPARTMENT values (4,'Headquaters','2016-02-03');
+    insert into DEPARTMENT values (5,'Production','2012-08-01');
+    
+    insert into EMPLOYEE values ( 101,'Parth','Mangalore','M',34000,4);
+    insert into EMPLOYEE values ( 102,'Nandini','Bangalore','F',70000,3);
+    insert into EMPLOYEE values ( 103,'Scott','Mysore','M',800000,1);
+    insert into EMPLOYEE values ( 104,'Kabir','Delhi','M',4000,2);
+    insert into EMPLOYEE values ( 105,'Aliya','Udupi','F',28000,5);
+    insert into EMPLOYEE values ( 106,'Dhruv','Bangalore','M',83000,1);
+    insert into EMPLOYEE values ( 107,'Mukti','Mumbai','F',49000,1);
+    insert into EMPLOYEE values ( 108,'Navya','Mysore','F',730000,1);
+    insert into EMPLOYEE values ( 109,'Manik','Mangalore','M',80000,1);
+    insert into EMPLOYEE values ( 110,'Nithi','Punjab','F',20000,1);
+    
+    insert into DLOCATION values (1,'Rajastan');
+    insert into DLOCATION values (2,'Goa');
+    insert into DLOCATION values (3,'Gujrath');
+    insert into DLOCATION values (4,'Kashmir');
+    insert into DLOCATION values (5,'Chennai');
+    
+    insert into PROJECT values (11,'AAA','America',5);
+    insert into PROJECT values (12,'IOT','Japan',4);
+    insert into PROJECT values (13,'CCC','Korea',3);
+    insert into PROJECT values (14,'DDD','South Africa',2);
+    insert into PROJECT values (15,'EEE','Srilanka',1);     
+    
+    insert into WORKS_ON values (101,11,5);
+    insert into WORKS_ON values (102,12,4);
+    insert into WORKS_ON values (103,13,8);
+    insert into WORKS_ON values (104,14,2);
+    insert into WORKS_ON values (105,15,9);                          
+    
+    alter table DEPARTMENT add MgrSSN integer references EMPLOYEE(SSN);
+    update DEPARTMENT set MgrSSN=103 where DNo=1;
+    update DEPARTMENT set MgrSSN=104 where DNo=2;
+    update DEPARTMENT set MgrSSN=101 where DNo=3;
+    update DEPARTMENT set MgrSSN=102 where DNo=4;
+    update DEPARTMENT set MgrSSN=105 where DNo=5;
+    
+    alter table EMPLOYEE add SuperSSN integer references EMPLOYEE(SSN);
+    update EMPLOYEE set SuperSSN=103 where SSN=101;
+    update EMPLOYEE set SuperSSN=101 where SSN=102;
+    update EMPLOYEE set SuperSSN=105 where SSN=103;
+    update EMPLOYEE set SuperSSN=102 where SSN=104;
+    update EMPLOYEE set SuperSSN=104 where SSN=105;
+    
+    
+
+---
+
+**Query #1**
+
+    select * from DEPARTMENT;
+
+| DNo | DName          | MgrStartDate | MgrSSN |
+| --- | -------------- | ------------ | ------ |
+| 1   | Accounts       | 2020-08-15   | 103    |
+| 2   | Research       | 2015-07-25   | 104    |
+| 3   | Administration | 2018-05-10   | 101    |
+| 4   | Headquaters    | 2016-02-03   | 102    |
+| 5   | Production     | 2012-08-01   | 105    |
+
+---
+**Query #2**
+
+    select * from EMPLOYEE;
+
+| SSN | Name    | Address   | Sex | Salary | DNo | SuperSSN |
+| --- | ------- | --------- | --- | ------ | --- | -------- |
+| 101 | Parth   | Mangalore | M   | 34000  | 4   | 103      |
+| 102 | Nandini | Bangalore | F   | 70000  | 3   | 101      |
+| 103 | Scott   | Mysore    | M   | 800000 | 1   | 105      |
+| 104 | Kabir   | Delhi     | M   | 4000   | 2   | 102      |
+| 105 | Aliya   | Udupi     | F   | 28000  | 5   | 104      |
+| 106 | Dhruv   | Bangalore | M   | 83000  | 1   |          |
+| 107 | Mukti   | Mumbai    | F   | 49000  | 1   |          |
+| 108 | Navya   | Mysore    | F   | 730000 | 1   |          |
+| 109 | Manik   | Mangalore | M   | 80000  | 1   |          |
+| 110 | Nithi   | Punjab    | F   | 20000  | 1   |          |
+
+---
+**Query #3**
+
+    select * from DLOCATION;
+
+| DNo | DLoc     |
+| --- | -------- |
+| 1   | Rajastan |
+| 2   | Goa      |
+| 3   | Gujrath  |
+| 4   | Kashmir  |
+| 5   | Chennai  |
+
+---
+**Query #4**
+
+    select * from PROJECT;
+
+| PNo | PName | PLocation    | DNo |
+| --- | ----- | ------------ | --- |
+| 11  | AAA   | America      | 5   |
+| 12  | IOT   | Japan        | 4   |
+| 13  | CCC   | Korea        | 3   |
+| 14  | DDD   | South Africa | 2   |
+| 15  | EEE   | Srilanka     | 1   |
+
+---
+**Query #5**
+
+    select * from WORKS_ON;
+
+| SSN | PNo | Hour |
+| --- | --- | ---- |
+| 101 | 11  | 5    |
+| 102 | 12  | 4    |
+| 103 | 13  | 8    |
+| 104 | 14  | 2    |
+| 105 | 15  | 9    |
+
+---
+**Query #6**
+
+    (select PNo 
+     from EMPLOYEE E, WORKS_ON W
+     where E.SSN=W.SSN and Name='Scott')
+    union
+    (select PNo 
+     from EMPLOYEE E, DEPARTMENT D, PROJECT P
+     where E.SSN=D.MgrSSN and D.DNo=P.DNo and Name='Scott');
+
+| PNo |
+| --- |
+| 13  |
+| 15  |
+
+---
+**Query #7**
+
+    select Name, Salary 'OldSalary', Salary * 1.1 'NewSalary'
+    from EMPLOYEE E, WORKS_ON W, PROJECT P
+    where E.SSN=W.SSN and W.PNo=P.PNo and PName='IOT';
+
+| Name    | OldSalary | NewSalary |
+| ------- | --------- | --------- |
+| Nandini | 70000     | 77000.0   |
+
+---
+**Query #8**
+
+    select sum(Salary), max(Salary), min(Salary), Avg(Salary)
+    from EMPLOYEE E, DEPARTMENT D
+    where DName='Accounts' and D.DNo=E.Dno;
+
+| sum(Salary) | max(Salary) | min(Salary) | Avg(Salary) |
+| ----------- | ----------- | ----------- | ----------- |
+| 1762000     | 800000      | 20000       | 293666.6667 |
+
+---
+**Query #9**
+
+    select DNo, count(SSN)
+    from EMPLOYEE
+    where Salary>600000 and DNo IN(select DNo
+                                   from EMPLOYEE
+                                   group by (DNo)
+                                   having count(SSN)>5)
+    group by DNo;
+
+| DNo | count(SSN) |
+| --- | ---------- |
+| 1   | 2          |
+
+---
+
+[View on DB Fiddle](https://www.db-fiddle.com/)
